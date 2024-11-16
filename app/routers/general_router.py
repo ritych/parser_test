@@ -25,8 +25,8 @@ async def fetch_sales_data(url: str, session: AsyncSession = Depends(get_prod_se
     # parse_sales_data(url, session)
     parsed_data = await parse_sales_data(url)
     await insert_data_to_db(parsed_data, session)
-    work = get_report.delay()
-    print(work.get(timeout=10))
+    get_report.delay()
+    # print(work.get(timeout=10))
 
     return {"message": f"{url} has been fetched"}
 
