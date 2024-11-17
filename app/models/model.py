@@ -1,4 +1,3 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, JSON
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
