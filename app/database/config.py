@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.pool import NullPool
 
 ASYNC_DRIVER = 'postgresql+asyncpg'
-ENV_FILENAME = '../.env'
+ENV_FILENAME = '.env'
 
 
 class Settings(BaseSettings):

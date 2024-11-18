@@ -10,7 +10,7 @@ import openai
 from app.schemas.schemas import SalesdataAllSchema
 from app.services.services import SalesdataService
 
-celery = Celery('tasks', broker='redis://localhost')
+celery = Celery('tasks', broker='redis://redis:6379')
 
 
 async def parse_sales_data(url: str):
