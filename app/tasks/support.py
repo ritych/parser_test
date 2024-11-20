@@ -1,21 +1,21 @@
 # THIRDPARTY
-from fastapi import Depends
+import os
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession
 import requests
 import xml.etree.ElementTree as ET
-from celery import Celery
 import openai
 
 # FIRSTPARTY
-from app.schemas.schemas import SalesdataAllSchema
-from app.services.services import SalesdataService
+from app.schemas.schemas import SalesdataAllSchema, ReportCreateSchema
+from app.services.services import SalesdataService, ReportService
+from app.main import logger
 
-celery = Celery('tasks', broker='redis://redis:6379')
 
-
-async def parse_sales_data(url: str):
-    uri = 'https://zandrlab.ru/1.xml'
-    response = requests.get(uri)
+async def parse_sales_data() -> list:
+    load_dotenv()
+    url = os.getenv('XML_FILE_URL')
+    response = requests.get(url)
     if response.status_code == 200:
         xml_data = response.content
         products = []
@@ -35,6 +35,9 @@ async def parse_sales_data(url: str):
                 "category": category,
                 "date": date,
             })
+            logger.info(f"Product {name} has been parsed")
+
+        logger.info(f"Parsed {len(products)} products")
 
     else:
         raise Exception("Failed to fetch XML data")
@@ -42,7 +45,7 @@ async def parse_sales_data(url: str):
     return products
 
 
-async def insert_data_to_db(products, session: AsyncSession):
+async def insert_data_to_db(products, session: AsyncSession) -> None:
     if products:
         service = SalesdataService(session=session)
         for result in products:
@@ -53,15 +56,7 @@ async def insert_data_to_db(products, session: AsyncSession):
         raise Exception("No products found")
 
 
-@celery.task
-def get_report():
-    my_file = open("log.txt", "a+")
-    my_file.write("Report done!")
-    my_file.close()
-    return 'This is report'
-
-
-def generate_report(date, total_revenue, products, categories):
+async def generate_report(date, total_revenue, products, categories, session: AsyncSession):
     top_products = sorted(products, key=lambda x: x['quantity'], reverse=True)[:3]
     prompt = f"""
     Проанализируй данные о продажах за {date}:
@@ -77,4 +72,13 @@ def generate_report(date, total_revenue, products, categories):
         messages=[{"role": "user", "content": prompt}]
     )
 
-    return response['choices'][0]['message']['content']
+    # сохранеям report в БД
+    service = ReportService(session=session)
+    await service.create_report(
+        ReportCreateSchema(
+            date=date,
+            report=response['choices'][0]['message']['content'],
+        )
+    )
+
+    return True

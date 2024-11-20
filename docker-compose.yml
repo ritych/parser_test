@@ -35,7 +35,16 @@ services:
     build:
       context: .
     container_name: celery_worker
-    command: bash -c "celery -A app.tasks:celery worker --loglevel=INFO"
+    command: bash -c "celery -A app.tasks.task:celery worker --loglevel=INFO"
+    depends_on:
+      - redis
+      - postgres
+
+  beat:
+    build:
+      context: .
+    container_name: celery_beat
+    command: bash -c "celery -A app.tasks.task:celery beat --loglevel=INFO"
     depends_on:
       - redis
       - postgres
@@ -44,9 +53,11 @@ services:
     build:
       context: .
     container_name: flower
-    command: bash -c "celery -A app.tasks:celery flower"
+    command: bash -c "celery -A app.tasks.task:celery flower"
+    env_file:
+      - .env
     ports:
-      - "5555:5555"
+      - "${FLOWER_PORT}:5555"
     depends_on:
       - redis
       - celery
@@ -61,7 +72,7 @@ services:
     container_name: parser-service
     entrypoint: ./entrypoint.sh
     ports:
-      - ${APP_PORT}:8000
+      - "${APP_PORT}:8000"
     depends_on:
       postgres:
         condition: service_healthy

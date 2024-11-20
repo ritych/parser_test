@@ -22,5 +22,5 @@ class SalesDAL:
         await self.session.commit()
         return new_data
 
-    # async def delete_sales_data(self, sales_data: SalesData) -> SalesData:
-    #     pass
+    async def delete_sales_data(self, id: int) -> SalesData:
+        pass

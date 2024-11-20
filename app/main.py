@@ -4,7 +4,8 @@ from fastapi import FastAPI
 import uvicorn
 
 # FIRSTPARTY
-from app.routers.general_router import router as general_router
+from app.routers.router import router as general_router
+
 
 app = FastAPI(
     title='Sales Analysis Service',
@@ -27,3 +28,4 @@ if __name__ == '__main__':
         port=8000,
         reload=True
     )
+
