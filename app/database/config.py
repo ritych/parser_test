@@ -1,5 +1,3 @@
-"""Этот модуль содержит базовый класс настроек сессии."""
-
 # THIRDPARTY
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import ConfigDict

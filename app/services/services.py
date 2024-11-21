@@ -1,12 +1,10 @@
 # THIRDPARTY
-from typing import Sequence
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # FIRSTPARTY
 from app.dal.sales_data import SalesDAL
 from app.dal.sales_report import ReportDAL
-from app.models.model import SalesData, SalesReport
+from app.models.model import SalesReport, SalesReport
 from app.schemas.schemas import SalesdataAllSchema, ReportCreateSchema
 from app.services.http_exceptions import (
     exception_400_validation,
@@ -15,13 +13,14 @@ from app.services.http_exceptions import (
 
 
 class SalesdataService:
+    """Сервис для работы с данными о продажах"""
     def __init__(self, session: AsyncSession) -> None:
         self.__dal = SalesDAL(session=session)
 
     async def create_sales_data(
             self,
             sales_data: SalesdataAllSchema
-    ) -> SalesData:
+    ) -> SalesReport:
         try:
             new_sales_data = await self.__dal.create_sales_data(sales_data=sales_data)
             return new_sales_data
@@ -32,6 +31,7 @@ class SalesdataService:
 
 
 class ReportService:
+    """Сервис для работы с репортами"""
     def __init__(self, session: AsyncSession) -> None:
         self.__dal = ReportDAL(session=session)
 

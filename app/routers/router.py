@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 # FIRSTPARTY
 from app.routers.dependencies import get_prod_session
+from app.schemas.schemas import ReportAllSchema
 from app.services.services import ReportService
 from app.loggers.logger import logger
 
@@ -14,7 +15,10 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_all_report(session: AsyncSession = Depends(get_prod_session)):
+async def get_all_report(
+        session: AsyncSession = Depends(get_prod_session)
+) -> list[ReportAllSchema]:
+    """Эндпоинт для получения списка всех дат отчетов в БД"""
     service = ReportService(session=session)
     result = await service.get_all_report()
     logger.info("Call @get_all_report()")
@@ -22,7 +26,11 @@ async def get_all_report(session: AsyncSession = Depends(get_prod_session)):
 
 
 @router.post("/")
-async def get_report_by_date(date: str, session: AsyncSession = Depends(get_prod_session)):
+async def get_report_by_date(
+        date: str,
+        session: AsyncSession = Depends(get_prod_session)
+) -> ReportAllSchema:
+    """Эндпоинт для получения отчета по дате"""
     service = ReportService(session=session)
     result = await service.get_report_by_date(date)
     logger.info(f"Call @get_report_by_date(date={date})")
@@ -31,4 +39,5 @@ async def get_report_by_date(date: str, session: AsyncSession = Depends(get_prod
 
 @router.get("/healthcheck")
 async def get_healthcheck():
+    """Эндпоинт для проверки статуса сервиса"""
     pass
