@@ -46,6 +46,9 @@ parser-service
 │   ├── README
 │   └── script.py.mako
 ├── tests
+│   ├── dal
+│   ├── models
+│   ├── routers
 │   └── __init__.py
 ├── alembic.ini
 ├── docker-compose.yaml
@@ -68,7 +71,7 @@ parser-service
 - `schemas/`: Pydantic-модели
 - `services/`: Содержит файлы с бизнес-логикой
 - `migrations/`: Миграции базы данных
-- `tests/`: Содержит модульные тесты
+- `tests/`: Содержит модульные тесты разбитые по директориям
 - `.env`: Файл конфигурации переменных среды
 - `.gitignore`: Указывает, какие файлы и папки не должны отслеживаться VCS
 - `alembic.ini`: Содержит конфигурацию Alembic для управления версиями базы
