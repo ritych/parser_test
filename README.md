@@ -1,13 +1,15 @@
 # Sales Analysis Service
 
 ## Краткое описание
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean leo sapien, rutrum at lacus id, 
-porttitor interdum neque. Cras metus sapien, luctus vitae tortor et, commodo egestas nisl. 
-Quisque hendrerit mollis ex eget pharetra. Praesent scelerisque diam id turpis consectetur 
-accumsan. Sed tristique mauris turpis, sed scelerisque ligula pellentesque eget. Suspendisse 
-a egestas ante. Nunc eu leo varius, aliquam lorem at, mollis nulla. Cras pulvinar ut elit 
-eget hendrerit. Donec eleifend laoreet urna, id tempus leo. In vulputate consectetur sapien, 
-eget commodo est euismod vel. 
+1. Создан сервис на FastAPI
+2. Реализован планировщик задач Celery
+3. Сервис делает:
+  - Получать XML файл по URL
+  - Парсить данные о продажах (товары, количество, цены)
+  - Сохранять данные в PostgreSQL
+  - Формировать промпт для LLM с анализом продаж
+  - Сохранять ответ LLM в базу данных
+
 
 ## Структура проекта:
 
